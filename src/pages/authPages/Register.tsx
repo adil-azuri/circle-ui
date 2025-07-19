@@ -6,12 +6,14 @@ import { Input } from "../../components/ui/input";
 import { api } from "../../api/api";
 import Cookies from "js-cookie";
 import Swal from 'sweetalert2';
+import { Label } from "@radix-ui/react-label";
 
 export default function Register() {
     const { auth } = useAuth();
     const navigate = useNavigate();
 
     const [username, setUsername] = useState("");
+    const [full_name, setFull_name] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -21,6 +23,7 @@ export default function Register() {
         try {
             await api.post("/auth/register", {
                 username,
+                full_name,
                 email,
                 password
             }, { withCredentials: true });
@@ -37,7 +40,7 @@ export default function Register() {
                     icon: 'success',
                     confirmButtonText: 'OK'
                 }).then(() => {
-                    navigate("/home");
+                    navigate("/");
                 });
             }
         } catch (error: any) {
@@ -53,7 +56,7 @@ export default function Register() {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'Login failed. Please try again.',
+                    text: `Registration failed: ${error.response.data.message || 'Please try again.'}`,
                     icon: 'error',
                     confirmButtonText: 'Try Again'
                 });
@@ -71,6 +74,7 @@ export default function Register() {
                 <h2 className="text-lg text-white">Register to Circle</h2>
 
                 <div>
+                    <Label htmlFor="username" className="text-gray-300 text-sm">Username</Label>
                     <Input
                         id="username"
                         type="text"
@@ -82,6 +86,19 @@ export default function Register() {
                     />
                 </div>
                 <div>
+                    <Label htmlFor="full_name" className="text-gray-300 text-sm">Full Name</Label>
+                    <Input
+                        id="full_name"
+                        type="text"
+                        placeholder="Insert Full Name*"
+                        value={full_name}
+                        onChange={(e) => setFull_name(e.target.value)}
+                        required
+                        className="border border-gray-500 rounded p-5 text-gray-300"
+                    />
+                </div>
+                <div>
+                    <Label htmlFor="email" className="text-gray-300 text-sm">Email</Label>
                     <Input
                         id="email"
                         type="email"
@@ -94,6 +111,7 @@ export default function Register() {
                 </div>
 
                 <div>
+                    <Label htmlFor="password" className="text-gray-300 text-sm">Password</Label>
                     <Input
                         id="password"
                         type="password"

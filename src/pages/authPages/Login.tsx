@@ -30,12 +30,11 @@ export default function Login() {
                 auth(token);
 
                 Swal.fire({
-                    title: 'Success!',
                     text: 'You have successfully logged in.',
                     icon: 'success',
-                    confirmButtonText: 'OK'
+                    timer: 1500
                 }).then(() => {
-                    navigate("/home");
+                    navigate("/");
                 });
             }
         } catch (error: any) {
@@ -51,7 +50,7 @@ export default function Login() {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'Login failed. Please try again.',
+                    text: 'Login failed. Invalid username or password',
                     icon: 'error',
                     confirmButtonText: 'Try Again'
                 });
@@ -99,7 +98,7 @@ export default function Login() {
                 </Button>
 
                 <p className="text-sm text-center text-gray-600 mt-4">
-                    Already have an account? <a href="/register" className="text-green-500">Create an account</a>
+                    Not have an account? <a href="/register" className="text-green-500">Create an account</a>
                 </p>
             </form>
         </div>

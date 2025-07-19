@@ -7,14 +7,15 @@ import PrivateRoute from "./library/PrivateRoutes";
 
 function App() {
   return (
+
     <AuthProvider>
+
       <BrowserRouter>
         <Routes>
           <Route path="/register" element={<Register />} />
           <Route path="/login" element={<Login />} />
-        </Routes>
-        <Routes>
-          <Route path="/home" element={
+
+          <Route path="/" element={
             <PrivateRoute>
               <Home />
             </PrivateRoute>

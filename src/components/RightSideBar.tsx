@@ -1,30 +1,57 @@
-import { Card, CardHeader, CardContent, } from "./ui/card";
+import { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { Card, CardHeader, CardContent } from "./ui/card";
+import { fetchUser } from '@/store/slices/userSlice';
+import { jwtDecode } from 'jwt-decode';
+import Cookies from 'js-cookie';
 
 function SidebarRight() {
+    const dispatch = useDispatch();
+    const token = Cookies.get('token');
+
+    const { account, isLoading, error } = useSelector((state: any) => state.user);
+
+    useEffect(() => {
+        if (token) {
+            const decoded: any = jwtDecode(token);
+            const userId = decoded.id;
+            dispatch<any>(fetchUser(userId));
+        }
+    }, [dispatch, token]);
+
     return (
-        <aside className="w-full max-w-sm hidden lg:flex flex-col p-2  rounded-l-md select-none">
-            <Card className="bg-gradient-to-r from-green-300 via-green-400 to-green-500 rounded-xl mb-5">
+        <aside className="w-full max-w-sm lg:flex flex-col p-4 bg-gray-900 rounded-l-md select-none">
+            <Card className="bg-gradient-to-r from-orange-500 via-green-400 to-green-500 rounded-xl mb-5">
                 <CardHeader className="flex items-center">
                     <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-gray-100 shadow-inner">
-                        <img src="" alt="" className="w-full h-full object-cover" />
+                        {isLoading ? (
+                            <div className="flex items-center justify-center w-full h-full">
+                                <span className="loader">Loading ...</span>
+                            </div>
+                        ) : (
+                            <img src={account?.photo_profile} alt={account?.full_name || "User  profile"} className="w-full h-full object-cover" />
+                        )}
                     </div>
                     <div className="flex-1 text-white ml-4">
-                        <h3 className="font-semibold text-lg">✨ Stella Audhina ✨</h3>
-                        <p className="text-sm">@audhinah</p>
+                        <h3 className="font-semibold text-md">
+                            {isLoading ? "Loading..." : account?.username ? `✨${account.full_name}✨` : "No User"}
+                        </h3>
+                        <p className="text-sm">{account?.username ? `@${account.username}` : ""}</p>
+                        {error && <p className="text-xs text-red-400">{error}</p>}
                     </div>
-                    <button className=" bg-gray-900 text-green-500 px-2 py-1 text-xs rounded-full hover:bg-gray-700 transition-colors duration-200">
+                    <button className="bg-gray-900 text-green-500 px-2 py-1 text-xs rounded-full hover:bg-gray-700 transition-colors duration-200">
                         Edit Profile
                     </button>
                 </CardHeader>
                 <CardContent>
                     <div className="flex justify-around text-white font-semibold mt-4 text-xs">
                         <div className="text-center">
-                            <div>291</div>
                             <div className="text-[10px] font-normal">Following</div>
+                            <div>10</div>
                         </div>
                         <div className="text-center">
-                            <div>23</div>
                             <div className="text-[10px] font-normal">Followers</div>
+                            <div>10</div>
                         </div>
                     </div>
                 </CardContent>
@@ -38,12 +65,10 @@ function SidebarRight() {
                     {[
                         { name: "Mohammed Jawahir", username: "@em_jawahir", following: true },
                         { name: "Shakia Kimathi", username: "@shakiakim", following: false },
-
                     ].map((user) => (
                         <li key={user.username} className="flex items-center justify-between bg-gray-800 p-3 rounded-md">
                             <div className="flex items-center">
                                 <div className="w-10 h-10 rounded-full bg-gray-700 flex items-center justify-center">
-                                    {/* Placeholder for user image / avatar */}
                                     <span className="text-white">{user.name.charAt(0)}</span>
                                 </div>
                                 <div className="ml-3">
@@ -65,8 +90,6 @@ function SidebarRight() {
                     DumbWays Indonesia
                 </a> • #1 Coding Bootcamp
             </div>
-
-
         </aside>
     );
 }

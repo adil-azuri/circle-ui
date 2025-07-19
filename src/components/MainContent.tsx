@@ -1,8 +1,8 @@
 function SidebarCenter() {
+
     return (
         <div className=" text-white w-1/2 p-5 rounded-lg shadow-lg">
             <h1 className="text-3xl mb-4 font-bold">Home</h1>
-            {/* Post Input Area */}
             <div className="mb-4 border-b border-gray-700 pb-3">
                 <textarea
                     className="w-full bg-gray-800 text-white p-2 rounded-lg"
