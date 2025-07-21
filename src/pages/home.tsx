@@ -4,7 +4,7 @@ import RightSidebar from '../components/RightSideBar';
 
 const Home = () => {
     return (
-        <div className='flex min-h-screen bg-zinc-800'>
+        <div className='flex min-h-screen w-full bg-zinc-900'>
             <LeftSidebar />
             <MainContent />
             <RightSidebar />

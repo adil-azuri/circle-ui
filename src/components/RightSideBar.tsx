@@ -20,8 +20,8 @@ function SidebarRight() {
     }, [dispatch, token]);
 
     return (
-        <aside className="w-full max-w-sm lg:flex flex-col p-4 bg-gray-900 rounded-l-md select-none">
-            <Card className="bg-gradient-to-r from-orange-500 via-green-400 to-green-500 rounded-xl mb-5">
+        <aside className=" lg:flex flex-col p-4 bg-zinc-900 rounded-l-md select-none">
+            <Card className="bg-zinc-800 rounded-xl mb-5">
                 <CardHeader className="flex items-center">
                     <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-gray-100 shadow-inner">
                         {isLoading ? (
@@ -33,13 +33,13 @@ function SidebarRight() {
                         )}
                     </div>
                     <div className="flex-1 text-white ml-4">
-                        <h3 className="font-semibold text-md">
+                        <h3 className="font-semibold text-sm">
                             {isLoading ? "Loading..." : account?.username ? `✨${account.full_name}✨` : "No User"}
                         </h3>
                         <p className="text-sm">{account?.username ? `@${account.username}` : ""}</p>
                         {error && <p className="text-xs text-red-400">{error}</p>}
                     </div>
-                    <button className="bg-gray-900 text-green-500 px-2 py-1 text-xs rounded-full hover:bg-gray-700 transition-colors duration-200">
+                    <button className="border border-white text-white px-2 py-2 text-xs rounded-full hover:bg-gray-700 transition-colors duration-200">
                         Edit Profile
                     </button>
                 </CardHeader>
