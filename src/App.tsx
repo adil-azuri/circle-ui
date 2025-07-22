@@ -3,7 +3,7 @@ import Login from "./pages/authPages/Login";
 import Register from "./pages/authPages/Register";
 import { AuthProvider } from "./context/authContext";
 import Home from "./pages/home";
-import PrivateRoute from "./library/PrivateRoutes";
+import PrivateRoute from "./lib/PrivateRoutes";
 
 function App() {
   return (

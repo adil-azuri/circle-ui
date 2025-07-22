@@ -9,8 +9,6 @@ function SidebarCenter() {
             <Thread_Post />
             <Thread_List />
 
-
-
         </div>
     );
 }
