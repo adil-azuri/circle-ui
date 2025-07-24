@@ -1,9 +1,7 @@
 import { useState } from "react";
 import avatar from "../../assets/avatar.png";
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
-import { api } from "@/api/api";
-import Swal from "sweetalert2";
-import Cookies from "js-cookie";
+import { handleThread } from "@/hooks/handleThread";
 
 export function Thread_Post() {
     const [content, setContent] = useState("");
@@ -12,109 +10,17 @@ export function Thread_Post() {
     const [errorMsg, setErrorMsg] = useState("");
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleThread = async (e: React.FormEvent) => {
+    const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
-
-        const token = Cookies.get("token");
-
-        if (!token) {
-            setErrorMsg("You must be logged in to Post Thread.");
-            return;
-        }
-
-        if (!content.trim()) {
-            Swal.fire({
-                title: 'Validation Error!',
-                text: 'Thread content cannot be empty.',
-                icon: 'warning',
-                confirmButtonText: 'OK'
-            });
-            setErrorMsg("Thread content cannot be empty.");
-            return;
-        }
-
-        const confirmResult = await Swal.fire({
-            title: 'Are you sure?',
-            text: "Do you want to post this thread?",
-            icon: 'question',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Yes, Post it!'
-        });
-
-        if (!confirmResult.isConfirmed) {
-            return;
-        }
-
-        setIsLoading(true);
-        const formData = new FormData();
-        formData.append("content", content);
-        if (photo) {
-            formData.append("photo", photo);
-        }
-
-        let timerInterval: NodeJS.Timeout | undefined;
-        Swal.fire({
-            title: 'Posting your thread...',
-            html: 'Please wait...',
-            timer: 2000,
-            timerProgressBar: true,
-            allowOutsideClick: false,
-            didOpen: () => {
-                Swal.showLoading();
-            },
-            willClose: () => {
-                clearInterval(timerInterval);
-            }
-        }).then((result) => {
-            if (result.dismiss === Swal.DismissReason.timer) {
-            }
-        });
-
-        try {
-            await api.post("/threads/add", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-                withCredentials: true,
-            });
-
-            Swal.close();
-
-            Swal.fire({
-                text: 'You have successfully added a post.',
-                icon: 'success',
-                timer: 2000
-            });
-            setContent("");
-            setPhoto(null);
-            setPhotoPreview(null);
-            setErrorMsg("");
-
-        } catch (error: any) {
-            Swal.close();
-
-            console.error("Post thread error:", error);
-
-            if (error.response && error.response.status === 401) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Invalid input for thread or unauthorized.',
-                    icon: 'error',
-                    confirmButtonText: 'Try Again'
-                });
-            } else {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Post failed. Please try again later.',
-                    icon: 'error',
-                    confirmButtonText: 'Try Again'
-                });
-            }
-        } finally {
-            setIsLoading(false);
-        }
+        handleThread(
+            content,
+            photo,
+            setContent,
+            setPhoto,
+            setPhotoPreview,
+            setErrorMsg,
+            setIsLoading
+        );
     };
 
     const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -135,10 +41,11 @@ export function Thread_Post() {
 
     return (
         <div className="flex mb-4 border-b border-gray-600 pb-3 gap-5">
+
             <Avatar>
                 <AvatarImage src={avatar} />
             </Avatar>
-            <form onSubmit={handleThread} className="flex w-full space-y-3 space-x-3">
+            <form onSubmit={onSubmit} className="flex w-full space-y-3 space-x-3">
                 <div className="w-full">
                     <div className="flex w-full items-center justify-between gap-3 space-y-3">
                         <textarea
@@ -147,7 +54,7 @@ export function Thread_Post() {
                             placeholder="What is happening?!"
                             value={content}
                             onChange={(e) => setContent(e.target.value)}
-                            className="w-full text-white p-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500"
+                            className="w-full border border-green-500 text-white p-2 rounded-lg focus:outline-none focus:ring-1 focus:ring-green-500"
                             required
                             disabled={isLoading}
                         />

@@ -37,6 +37,7 @@ function SidebarRight() {
                             {isLoading ? "Loading..." : account?.username ? `✨${account.full_name}✨` : "No User"}
                         </h3>
                         <p className="text-sm">{account?.username ? `@${account.username}` : ""}</p>
+                        <p className="text-sm mt-5">{account?.bio ? `${account.bio}` : ""}</p>
                         {error && <p className="text-xs text-red-400">{error}</p>}
                     </div>
                     <button className="border border-white text-white px-2 py-2 text-xs rounded-full hover:bg-gray-700 transition-colors duration-200">

@@ -2,9 +2,7 @@ import { useState } from "react";
 import avatar from "@/assets/avatar.png";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "../ui/dialog";
-import { api } from "@/api/api";
-import Swal from "sweetalert2";
-import Cookies from "js-cookie";
+import { handleThread } from "@/hooks/handleThread";
 
 export function Thread_Dialog() {
     const [content, setContent] = useState("");
@@ -12,63 +10,22 @@ export function Thread_Dialog() {
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
     const [errorMsg, setErrorMsg] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [isLoading, setIsLoading] = useState(false);
 
-    const handleThread = async (e: React.FormEvent) => {
+    const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-
-        const token = Cookies.get("token");
-
-        if (!token) {
-            setErrorMsg("You must be logged in to Post Thread.");
-            return;
-        }
-
-        const formData = new FormData();
-        formData.append("content", content);
-        if (photo) {
-            formData.append("photo", photo);
-        }
-
-        try {
-            await api.post("/threads/add", formData, {
-                headers: {
-                    "Content-Type": "multipart/form-data",
-                },
-                withCredentials: true,
-            });
-
-            Swal.fire({
-                text: 'You have successfully added a post.',
-                icon: 'success',
-                timer: 1500
-            });
-
-
-            setContent("");
-            setPhoto(null);
-            setPhotoPreview(null);
-            setErrorMsg("");
-            setIsDialogOpen(false);
-
-        } catch (error: any) {
-            console.error("Post thread error:", error);
-
-            if (error.response && error.response.status === 401) {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'You are not authorized to post or invalid input. Please log in.',
-                    icon: 'error',
-                    confirmButtonText: 'Try Again'
-                });
-            } else {
-                Swal.fire({
-                    title: 'Error!',
-                    text: 'Failed to post thread. Please try again later.',
-                    icon: 'error',
-                    confirmButtonText: 'Try Again'
-                });
-            }
-        }
+        setIsDialogOpen(false);
+        isLoading
+        await handleThread(
+            content,
+            photo,
+            setContent,
+            setPhoto,
+            setPhotoPreview,
+            setErrorMsg,
+            setIsLoading,
+            setIsDialogOpen
+        );
     };
 
     const handlePhotoChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -105,7 +62,7 @@ export function Thread_Dialog() {
                             <AvatarImage src={avatar} />
                         </Avatar>
 
-                        <form onSubmit={handleThread} className="flex flex-col flex-grow space-y-4">
+                        <form onSubmit={onSubmit} className="flex flex-col flex-grow space-y-4">
                             <textarea
                                 id="content"
                                 rows={3}
