@@ -1,5 +1,5 @@
 import { useState } from "react";
-import avatar from "../../assets/avatar.png";
+import avatar from "@/assets/avatar.png"
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { handleThread } from "@/hooks/handleThread";
 
@@ -40,8 +40,7 @@ export function Thread_Post() {
     };
 
     return (
-        <div className="flex mb-4 border-b border-gray-600 pb-3 gap-5">
-
+        <div className="p-3 flex mb-4 border-b border-gray-600 gap-5">
             <Avatar>
                 <AvatarImage src={avatar} />
             </Avatar>

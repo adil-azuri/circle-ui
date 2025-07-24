@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import { api } from "../../api/api";
+import { useAuth } from "../hooks/useAuth";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { api } from "../api/api";
 import Cookies from "js-cookie";
 import Swal from 'sweetalert2';
 import { Label } from "@radix-ui/react-label";
@@ -40,7 +40,7 @@ export default function Register() {
                     icon: 'success',
                     confirmButtonText: 'OK'
                 }).then(() => {
-                    navigate("/");
+                    navigate("/home");
                 });
             }
         } catch (error: any) {

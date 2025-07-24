@@ -11,7 +11,7 @@ export const handleThread = async (
     setPhotoPreview: React.Dispatch<React.SetStateAction<string | null>>,
     setErrorMsg: React.Dispatch<React.SetStateAction<string>>,
     setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
-    setIsDialogOpen?: React.Dispatch<React.SetStateAction<boolean>> // Optional for dialog
+    setIsDialogOpen?: React.Dispatch<React.SetStateAction<boolean>>
 ) => {
     const token = Cookies.get("token");
 

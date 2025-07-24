@@ -1,6 +1,6 @@
 import { useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Card, CardHeader, CardContent } from "./ui/card";
+import { Card, CardHeader, CardContent } from "../../components/ui/card";
 import { fetchUser } from '@/store/slices/userSlice';
 import { jwtDecode } from 'jwt-decode';
 import Cookies from 'js-cookie';
@@ -20,7 +20,7 @@ function SidebarRight() {
     }, [dispatch, token]);
 
     return (
-        <aside className=" lg:flex flex-col p-4 bg-zinc-900 rounded-l-md select-none">
+        <aside className="max-w-full p-2">
             <Card className="bg-zinc-800 rounded-xl mb-5">
                 <CardHeader className="flex items-center">
                     <div className="w-16 h-16 rounded-full overflow-hidden flex-shrink-0 bg-gray-100 shadow-inner">

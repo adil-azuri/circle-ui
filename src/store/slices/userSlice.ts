@@ -29,7 +29,7 @@ export const fetchUser = createAsyncThunk<UserAccount, string, { rejectValue: st
     async (userId, { rejectWithValue }) => {
         try {
             const response: any = await api.get(`/auth/getuser/${userId}`);
-            return response.data.account as UserAccount; // Extract user from response
+            return response.data.account as UserAccount;
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Failed to fetch user data');
         }
@@ -44,11 +44,10 @@ const userSlice = createSlice({
         updateProfile: (state, action: PayloadAction<Partial<UserAccount>>) => {
             if (state.account) {
                 Object.assign(state.account, action.payload);
-                // Save updated user to localStorage
                 try {
                     localStorage.setItem('user', JSON.stringify(state.account));
                 } catch (e) {
-                    // Optional: handle localStorage error
+
                 }
             }
         },
