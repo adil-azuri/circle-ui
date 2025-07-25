@@ -16,8 +16,10 @@ interface LikeButtonProps {
 const LikeButton: React.FC<LikeButtonProps> = ({ threadId, likes, setLikes }) => {
     const dispatch = useDispatch();
     const { account } = useSelector((state: any) => state.user);
+
     const initialIsLiked = account?.likedThreads?.includes(threadId) ?? false;
     const [isLiked, setIsLiked] = React.useState(initialIsLiked);
+
     const wsUrl = "ws://localhost:3000";
     const { showSnackbar } = useSnackBar();
 
@@ -29,7 +31,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ threadId, likes, setLikes }) =>
         if (message.type === 'new_like') {
             const updatedLike: any = message.payload;
             if (updatedLike.thread_id === threadId) {
-                showSnackbar(`${updatedLike.user_full_name || 'Someone'} liked thread!`);
+                showSnackbar(`${updatedLike.user_full_name} liked a thread!`);
             }
         }
     };
