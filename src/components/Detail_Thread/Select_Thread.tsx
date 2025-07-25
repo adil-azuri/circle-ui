@@ -33,14 +33,6 @@ export function Select_Thread() {
         fetchThreadDetail();
     }, [id]);
 
-    const toggleLike = () => {
-        setThread((prevThread: any) => ({
-            ...prevThread,
-            isLiked: !prevThread.isLiked,
-            likes: prevThread.isLiked ? prevThread.likes - 1 : prevThread.likes + 1
-        }));
-    };
-
     if (loading) {
         return <div className="text-white text-center py-4">Loading...</div>;
     }
@@ -72,9 +64,9 @@ export function Select_Thread() {
                     )}
                     <div className="flex gap-7 mb-3 cursor-pointer">
                         <LikeButton
-                            isLiked={thread.isLiked}
-                            likes={thread.likes}
-                            onToggleLike={() => toggleLike()}
+                            threadId={thread.id}
+                            likes={thread.likes.length}
+                            setLikes={(newLikes) => setThread((prev: any) => ({ ...prev, likes: Array(newLikes).fill({}) }))}
                         />
                         <div className="" onClick={() => setShowReplyForm(!showReplyForm)}>
                             <ReplyCount replyCount={Array.isArray(thread.replies) ? thread.replies.length : 0} />

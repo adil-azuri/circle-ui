@@ -19,27 +19,26 @@ export function Thread_List() {
     const wsUrl = "ws://localhost:3000";
     const { showSnackbar } = useSnackBar();
 
+
     useEffect(() => {
         const fetchThreads = async () => {
             setLoading(true);
             try {
                 const res = await api.get("auth/threads", { params: { limit: 25 } });
                 const threadsData = (res.data as any)?.data?.threads;
-                setThreads(threadsData);
+                setThreads(threadsData || []);
             } catch (err) {
                 console.error("Failed to fetch threads:", err);
             } finally {
                 setLoading(false);
             }
         };
-
         fetchThreads();
     }, []);
 
     const handleWebSocketMessage = (message: any) => {
         if (message.type === 'new_thread') {
             const updatedThread: Thread = message.payload;
-
             setThreads(prevThreads => {
                 const existingThreadIndex = prevThreads.findIndex(thread => thread.id === updatedThread.id);
                 let newThreadsList;
@@ -51,7 +50,6 @@ export function Thread_List() {
                 }
                 return newThreadsList.sort((a, b) => new Date(b.updateAt).getTime() - new Date(a.updateAt).getTime());
             });
-
             showSnackbar(`${updatedThread.user.full_name} uploaded a new thread`);
         } else {
             console.log("Received unknown WebSocket message type:", message.type);
@@ -59,14 +57,6 @@ export function Thread_List() {
     };
 
     useWebSocket(wsUrl, handleWebSocketMessage);
-
-    const toggleLike = (threadId: number) => {
-        setThreads(prevThreads =>
-            prevThreads.map(thread =>
-                thread.id === threadId ? { ...thread, isLiked: !thread.isLiked } : thread
-            )
-        );
-    };
 
     if (loading) {
         return <div className="text-white text-center py-4">Loading...</div>;
@@ -105,9 +95,15 @@ export function Thread_List() {
                                     </div>
                                     <div className="flex justify-start gap-10 text-gray-400 mt-2">
                                         <LikeButton
-                                            isLiked={thread.isLiked}
+                                            threadId={thread.id}
                                             likes={thread.likes}
-                                            onToggleLike={() => toggleLike(thread.id)}
+                                            setLikes={(newLikes) => {
+                                                setThreads(prevThreads =>
+                                                    prevThreads.map(t =>
+                                                        t.id === thread.id ? { ...t, likes: newLikes } : t
+                                                    )
+                                                );
+                                            }}
                                         />
                                         <ReplyCount replyCount={thread.reply} />
                                     </div>

@@ -2,14 +2,30 @@ import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { api } from '../../api/api';
 
+interface Like {
+    id: number;
+    user_id: number;
+    thread_id: number;
+    created_at: string;
+    created_by: string | null;
+    updated_at: string;
+    updated_by: string | null;
+}
+
 interface UserAccount {
     id: number;
     username: string;
-    full_name: string;
     email: string;
     password: string;
+    full_name: string;
     photo_profile: string | null;
     bio: string | null;
+    createdAt: string;
+    createdBy: string | null;
+    updatedAt: string;
+    updatedBy: string | null;
+    likes: Like[];
+    likedThreads: number[]; // thread_id yang sudah di-like user
 }
 
 interface UserState {
@@ -36,7 +52,6 @@ export const fetchUser = createAsyncThunk<UserAccount, string, { rejectValue: st
     }
 );
 
-// User slice
 const userSlice = createSlice({
     name: 'user',
     initialState,
@@ -46,36 +61,45 @@ const userSlice = createSlice({
                 Object.assign(state.account, action.payload);
                 try {
                     localStorage.setItem('user', JSON.stringify(state.account));
-                } catch (e) {
-
+                } catch (e) { }
+            }
+        },
+        addLikedThread: (state, action: PayloadAction<number>) => {
+            if (state.account) {
+                if (!state.account.likedThreads) state.account.likedThreads = [];
+                if (!state.account.likedThreads.includes(action.payload)) {
+                    state.account.likedThreads.push(action.payload);
                 }
+            }
+        },
+        removeLikedThread: (state, action: PayloadAction<number>) => {
+            if (state.account && state.account.likedThreads) {
+                state.account.likedThreads = state.account.likedThreads.filter(id => id !== action.payload);
             }
         },
         clearUser: () => initialState,
     },
     extraReducers: (builder) => {
         builder
-            .addCase(fetchUser.pending, (state) => {
+            .addCase(fetchUser.pending, (state: UserState) => {
                 state.isLoading = true;
                 state.error = null;
             })
-            .addCase(fetchUser.fulfilled, (state, action) => {
-                state.account = action.payload;
+            .addCase(fetchUser.fulfilled, (state: UserState, action: PayloadAction<UserAccount>) => {
+                // Inisialisasi likedThreads dari likes
+                const likedThreads = action.payload.likes ? action.payload.likes.map(like => like.thread_id) : [];
+                state.account = { ...action.payload, likedThreads };
                 state.isLoading = false;
-                // Save user data to localStorage
                 try {
-                    localStorage.setItem('user', JSON.stringify(action.payload));
-                } catch (e) {
-                    // Optional: handle localStorage error
-                }
+                    localStorage.setItem('user', JSON.stringify({ ...action.payload, likedThreads }));
+                } catch (e) { }
             })
-            .addCase(fetchUser.rejected, (state, action) => {
+            .addCase(fetchUser.rejected, (state: UserState, action: any) => {
                 state.isLoading = false;
                 state.error = (action.payload as string) || 'Failed to fetch user data';
             });
     },
 });
 
-// Export actions and reducer
-export const { updateProfile, clearUser } = userSlice.actions;
+export const { updateProfile, addLikedThread, removeLikedThread, clearUser } = userSlice.actions;
 export default userSlice.reducer;
