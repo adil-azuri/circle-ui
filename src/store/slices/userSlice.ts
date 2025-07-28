@@ -24,8 +24,10 @@ interface UserAccount {
     createdBy: string | null;
     updatedAt: string;
     updatedBy: string | null;
+    following: any[];
+    follower: any[];
     likes: Like[];
-    likedThreads: number[]; // thread_id yang sudah di-like user
+    likedThreads: number[];
 }
 
 interface UserState {
@@ -40,6 +42,7 @@ const initialState: UserState = {
     error: null,
 };
 
+// Async thunk to fetch user data
 export const fetchUser = createAsyncThunk<UserAccount, string, { rejectValue: string }>(
     'user/fetchUser',
     async (userId, { rejectWithValue }) => {
@@ -48,6 +51,28 @@ export const fetchUser = createAsyncThunk<UserAccount, string, { rejectValue: st
             return response.data.account as UserAccount;
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Failed to fetch user data');
+        }
+    }
+);
+
+// Async thunk to update user profile
+export const updateUserProfile = createAsyncThunk<UserAccount, FormData, { rejectValue: string }>(
+    'user/updateUserProfile',
+    async (formData, { rejectWithValue, getState }) => {
+        const state = getState() as { user: UserState };
+        const userId = state.user.account?.id;
+
+        if (!userId) {
+            return rejectWithValue('User not logged in');
+        }
+
+        try {
+            const response: any = await api.put(`/auth/user/update/`, formData, {
+                headers: { 'Content-Type': 'multipart/form-data' },
+            });
+            return response.data.account as UserAccount;
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || 'Failed to update profile');
         }
     }
 );
@@ -61,7 +86,9 @@ const userSlice = createSlice({
                 Object.assign(state.account, action.payload);
                 try {
                     localStorage.setItem('user', JSON.stringify(state.account));
-                } catch (e) { }
+                } catch (e) {
+                    console.error("Failed to save user to localStorage", e);
+                }
             }
         },
         addLikedThread: (state, action: PayloadAction<number>) => {
@@ -86,17 +113,35 @@ const userSlice = createSlice({
                 state.error = null;
             })
             .addCase(fetchUser.fulfilled, (state: UserState, action: PayloadAction<UserAccount>) => {
-                // Inisialisasi likedThreads dari likes
                 const likedThreads = action.payload.likes ? action.payload.likes.map(like => like.thread_id) : [];
                 state.account = { ...action.payload, likedThreads };
                 state.isLoading = false;
                 try {
                     localStorage.setItem('user', JSON.stringify({ ...action.payload, likedThreads }));
-                } catch (e) { }
+                } catch (e) {
+                    console.error("Failed to save user to localStorage", e);
+                }
             })
             .addCase(fetchUser.rejected, (state: UserState, action: any) => {
                 state.isLoading = false;
                 state.error = (action.payload as string) || 'Failed to fetch user data';
+            })
+            .addCase(updateUserProfile.pending, (state: UserState) => {
+                state.isLoading = true;
+                state.error = null;
+            })
+            .addCase(updateUserProfile.fulfilled, (state: UserState, action: PayloadAction<UserAccount>) => {
+                state.account = { ...state.account, ...action.payload };
+                state.isLoading = false;
+                try {
+                    localStorage.setItem('user', JSON.stringify(state.account));
+                } catch (e) {
+                    console.error("Failed to save user to localStorage", e);
+                }
+            })
+            .addCase(updateUserProfile.rejected, (state: UserState, action: any) => {
+                state.isLoading = false;
+                state.error = (action.payload as string) || 'Failed to update profile';
             });
     },
 });

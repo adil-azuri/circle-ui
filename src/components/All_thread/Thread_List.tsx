@@ -72,7 +72,8 @@ export function Thread_List() {
                         <div key={thread.id} className="border-b border-gray-600 px-4">
                             <div className="flex my-5 space-x-3 ">
                                 <Avatar>
-                                    <AvatarImage src={thread.user.profile_picture ? `${baseUrl}${thread.user.profile_picture}` : avatar} />
+                                    <AvatarImage className="object-cover"
+                                        src={thread.user.profile_picture ? `${baseUrl}${thread.user.profile_picture}` : avatar} />
                                 </Avatar>
                                 <div className="w-full cursor-pointer">
                                     <div className="cursor-pointer"
