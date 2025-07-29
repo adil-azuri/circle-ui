@@ -24,7 +24,7 @@ export function Thread_List() {
         const fetchThreads = async () => {
             setLoading(true);
             try {
-                const res = await api.get("auth/threads", { params: { limit: 25 } });
+                const res = await api.get("auth/threads", { params: { limit: 99 } });
                 const threadsData = (res.data as any)?.data?.threads;
                 setThreads(threadsData || []);
             } catch (err) {
@@ -63,8 +63,8 @@ export function Thread_List() {
     }
 
     return (
-        <aside className="h-screen overflow-hidden w-full">
-            <ScrollArea className="h-full">
+        <aside className="h-full w-full overflow-hidden">
+            <ScrollArea className="h-full overflow-y-auto">
                 {threads.length === 0 && !loading ? (
                     <p className="text-white text-center mt-8">No threads to display.</p>
                 ) : (

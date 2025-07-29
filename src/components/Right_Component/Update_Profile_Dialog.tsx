@@ -108,7 +108,7 @@ export function ProfileUpdateDialog() {
                                 className="w-full h-full object-cover"
                             />
                         </div>
-                        <label className="absolute bottom-0 right-0 bg-green-600 hover:bg-green-500 text-white rounded-full p-1 cursor-pointer border-2 border-white" style={{ transform: 'translate(30%, 30%)' }}>
+                        <label className="absolute bottom-0 right-0 text-white rounded-full p-1 cursor-pointer border-2 border-white" style={{ transform: 'translate(30%, 30%)' }}>
                             <input
                                 type="file"
                                 accept="image/*"
@@ -125,7 +125,7 @@ export function ProfileUpdateDialog() {
                     </DialogTitle>
                     <form onSubmit={onSubmit} className="flex flex-col gap-4">
                         <div>
-                            <label className="block text-sm mb-1">Name</label>
+                            <label className="block text-sm mb-1">Full Name</label>
                             <input
                                 type="text"
                                 placeholder="Full Name"

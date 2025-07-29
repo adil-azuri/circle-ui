@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { Select_Thread } from "@/components/Detail_Thread/Select_Thread";
 import { Reply_Thread } from "@/components/Detail_Thread/Reply";
 
-export const Detail_thread = () => {
+export const Center_Detail_thread = () => {
     const navigate = useNavigate();
 
     return (

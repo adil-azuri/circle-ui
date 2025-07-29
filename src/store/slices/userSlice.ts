@@ -1,3 +1,5 @@
+// user_slice
+
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { api } from '../../api/api';
@@ -42,6 +44,13 @@ const initialState: UserState = {
     error: null,
 };
 
+interface FollowRequest {
+    follow_id: number;
+}
+interface UnfollowRequest {
+    unfollow_id: number;
+}
+
 // Async thunk to fetch user data
 export const fetchUser = createAsyncThunk<UserAccount, string, { rejectValue: string }>(
     'user/fetchUser',
@@ -73,6 +82,31 @@ export const updateUserProfile = createAsyncThunk<UserAccount, FormData, { rejec
             return response.data.account as UserAccount;
         } catch (error: any) {
             return rejectWithValue(error.response?.data?.message || 'Failed to update profile');
+        }
+    }
+);
+
+
+// Async thunk to follow a user
+export const followUser = createAsyncThunk<void, FollowRequest, { rejectValue: string }>(
+    'user/followUser',
+    async (followRequest, { rejectWithValue }) => {
+        try {
+            await api.post('/follow/follow', followRequest);
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || 'Failed to follow user');
+        }
+    }
+);
+
+// Async thunk to unfollow a user
+export const unfollowUser = createAsyncThunk<void, UnfollowRequest, { rejectValue: string }>(
+    'user/unfollowUser',
+    async (unfollowRequest, { rejectWithValue }) => {
+        try {
+            await api.request({ method: 'delete', url: '/follow/unfollow', data: unfollowRequest });
+        } catch (error: any) {
+            return rejectWithValue(error.response?.data?.message || 'Failed to unfollow user');
         }
     }
 );
@@ -114,10 +148,15 @@ const userSlice = createSlice({
             })
             .addCase(fetchUser.fulfilled, (state: UserState, action: PayloadAction<UserAccount>) => {
                 const likedThreads = action.payload.likes ? action.payload.likes.map(like => like.thread_id) : [];
-                state.account = { ...action.payload, likedThreads };
+                // Map following to array of user ids
+                let following: number[] = [];
+                if (Array.isArray(action.payload.following)) {
+                    following = action.payload.following.map((f: any) => f.follower_id);
+                }
+                state.account = { ...action.payload, likedThreads, following };
                 state.isLoading = false;
                 try {
-                    localStorage.setItem('user', JSON.stringify({ ...action.payload, likedThreads }));
+                    localStorage.setItem('user', JSON.stringify({ ...action.payload, likedThreads, following }));
                 } catch (e) {
                     console.error("Failed to save user to localStorage", e);
                 }
@@ -126,6 +165,7 @@ const userSlice = createSlice({
                 state.isLoading = false;
                 state.error = (action.payload as string) || 'Failed to fetch user data';
             })
+
             .addCase(updateUserProfile.pending, (state: UserState) => {
                 state.isLoading = true;
                 state.error = null;
@@ -142,9 +182,38 @@ const userSlice = createSlice({
             .addCase(updateUserProfile.rejected, (state: UserState, action: any) => {
                 state.isLoading = false;
                 state.error = (action.payload as string) || 'Failed to update profile';
+            })
+
+
+            .addCase(followUser.fulfilled, (state, action) => {
+                if (state.account) {
+                    if (!state.account.following) state.account.following = [];
+                    const id = action.meta.arg.follow_id;
+                    if (!state.account.following.includes(id)) {
+                        state.account.following.push(id);
+                    }
+                }
+            })
+            .addCase(followUser.rejected, (_, action) => {
+                // Handle error
+                console.error(action.payload);
+            })
+            .addCase(unfollowUser.fulfilled, (state, action) => {
+                if (state.account && state.account.following) {
+                    state.account.following = state.account.following.filter(id => id !== action.meta.arg.unfollow_id);
+                }
+            })
+            .addCase(unfollowUser.rejected, (_, action) => {
+                // Handle error
+                console.error(action.payload);
             });
+
+
     },
 });
 
+// (removed duplicate export)
+export const userReducer = userSlice.reducer;
 export const { updateProfile, addLikedThread, removeLikedThread, clearUser } = userSlice.actions;
-export default userSlice.reducer;
+
+

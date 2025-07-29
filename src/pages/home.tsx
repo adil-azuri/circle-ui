@@ -4,9 +4,9 @@ import { Outlet } from 'react-router-dom';
 
 const Home = () => {
     return (
-        <div className='flex min-h-screen w-full bg-zinc-900'>
+        <div className='flex h-screen max-h-screen overflow-hidden w-full bg-zinc-900'>
             <LeftSidebar />
-            <div className="w-1/2 text-white border-x border-gray-700">
+            <div className="flex min-h-0 h-screen text-white border-x border-gray-700 w-full ">
                 <Outlet />
             </div>
             <RightSidebar />

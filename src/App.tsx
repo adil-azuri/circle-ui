@@ -4,9 +4,10 @@ import Register from "./pages/Register";
 import { AuthProvider } from "./context/authContext";
 import Home from "./pages/home";
 import PrivateRoute from "./lib/PrivateRoutes";
-import { All_Thread } from "./pages/main_pages/Center_All_Thread";
-import { Detail_thread } from "./pages/main_pages/Center_Detail_Thread";
+import { Center_All_Thread } from "./pages/main_pages/Center_All_Thread";
+import { Center_Detail_thread, } from "./pages/main_pages/Center_Detail_Thread";
 import { SnackBarProvider } from "@/context/SnackBarContext";
+import { Center_Follow } from "./pages/main_pages/Center_Follow";
 
 function App() {
   return (
@@ -24,8 +25,9 @@ function App() {
                 <Home />
               </PrivateRoute>
             }>
-              <Route index element={<All_Thread />} />
-              <Route path="threads/:id" element={<Detail_thread />} />
+              <Route index element={<Center_All_Thread />} />
+              <Route path="threads/:id" element={<Center_Detail_thread />} />
+              <Route path="/home/follow" element={<Center_Follow />} />
             </Route>
           </Routes>
         </BrowserRouter>
