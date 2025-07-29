@@ -3,40 +3,7 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { api } from '../../api/api';
-
-interface Like {
-    id: number;
-    user_id: number;
-    thread_id: number;
-    created_at: string;
-    created_by: string | null;
-    updated_at: string;
-    updated_by: string | null;
-}
-
-interface UserAccount {
-    id: number;
-    username: string;
-    email: string;
-    password: string;
-    full_name: string;
-    photo_profile: string | null;
-    bio: string | null;
-    createdAt: string;
-    createdBy: string | null;
-    updatedAt: string;
-    updatedBy: string | null;
-    following: any[];
-    follower: any[];
-    likes: Like[];
-    likedThreads: number[];
-}
-
-interface UserState {
-    account: UserAccount | null;
-    isLoading: boolean;
-    error: string | null;
-}
+import type { FollowRequest, UnfollowRequest, UserAccount, UserState } from '@/types/redux_types'
 
 const initialState: UserState = {
     account: null,
@@ -44,12 +11,6 @@ const initialState: UserState = {
     error: null,
 };
 
-interface FollowRequest {
-    follow_id: number;
-}
-interface UnfollowRequest {
-    unfollow_id: number;
-}
 
 // Async thunk to fetch user data
 export const fetchUser = createAsyncThunk<UserAccount, string, { rejectValue: string }>(
