@@ -11,7 +11,7 @@ interface User {
     photo_profile: string | null;
 }
 
-export function Follow() {
+export function Suggest_Follow() {
     const [loading, setLoading] = useState<boolean>(true);
     const [users, setUsers] = useState<User[]>([]);
     const baseUrl = `http://localhost:3000/uploads/`;

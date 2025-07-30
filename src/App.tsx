@@ -8,6 +8,7 @@ import { Center_All_Thread } from "./pages/main_pages/Center_All_Thread";
 import { Center_Detail_thread, } from "./pages/main_pages/Center_Detail_Thread";
 import { SnackBarProvider } from "@/context/SnackBarContext";
 import { Center_Follow } from "./pages/main_pages/Center_Follow";
+import { Center_Search } from "./pages/main_pages/Center_Search";
 
 function App() {
   return (
@@ -28,6 +29,7 @@ function App() {
               <Route index element={<Center_All_Thread />} />
               <Route path="threads/:id" element={<Center_Detail_thread />} />
               <Route path="/home/follow" element={<Center_Follow />} />
+              <Route path="/home/search" element={<Center_Search />} />
             </Route>
           </Routes>
         </BrowserRouter>

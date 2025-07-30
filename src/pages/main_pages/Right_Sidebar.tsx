@@ -1,4 +1,4 @@
-import { Follow } from '@/components/Right_Component/Suggest_Follow';
+import { Suggest_Follow } from '@/components/Right_Component/Suggest_Follow';
 import { Profile } from '@/components/Right_Component/Profile';
 
 function SidebarRight() {
@@ -6,7 +6,7 @@ function SidebarRight() {
         <aside className="flex flex-col h-full min-h-0 w-3xl max-w-full p-2 gap-4">
             <Profile />
             <div className="flex flex-col flex-1 min-h-0">
-                <Follow />
+                <Suggest_Follow />
                 <div className="flex-1" >
 
                     <div className="mt-4 pt-4 border-t border-gray-600 text-gray-500 text-xs">

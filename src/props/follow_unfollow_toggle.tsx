@@ -18,10 +18,10 @@ export const FollowUnfollowButton: React.FC<FollowUnfollowButtonProps> = ({ foll
         try {
             if (!isFollowing) {
                 await dispatch(followUser({ follow_id: followId }) as any);
-                showSnackbar("You are now following this user!");
+                showSnackbar("You are now following a user!");
             } else {
                 await dispatch(unfollowUser({ unfollow_id: followId }) as any);
-                showSnackbar("You have unfollowed this user.");
+                showSnackbar("You have unfollowed a user.");
             }
         } catch (error: any) {
             console.error("Failed to update follow status:", error);

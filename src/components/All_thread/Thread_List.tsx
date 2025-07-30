@@ -15,10 +15,10 @@ export function Thread_List() {
     const navigate = useNavigate();
     const [threads, setThreads] = useState<Thread[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
+    const [visibleThreads, setVisibleThreads] = useState<number>(5); // State untuk jumlah thread yang ditampilkan
     const baseUrl = `http://localhost:3000/uploads/`;
     const wsUrl = "ws://localhost:3000";
     const { showSnackbar } = useSnackBar();
-
 
     useEffect(() => {
         const fetchThreads = async () => {
@@ -58,17 +58,21 @@ export function Thread_List() {
 
     useWebSocket(wsUrl, handleWebSocketMessage);
 
+    const loadMoreThreads = () => {
+        setVisibleThreads(prev => prev + 5);
+    };
+
     if (loading) {
         return <div className="text-white text-center py-4">Loading...</div>;
     }
 
     return (
-        <aside className="h-full w-full overflow-hidden">
+        <aside className="h-full w-full overflow-hidden transition-all">
             <ScrollArea className="h-full overflow-y-auto">
                 {threads.length === 0 && !loading ? (
                     <p className="text-white text-center mt-8">No threads to display.</p>
                 ) : (
-                    threads.map(thread => (
+                    threads.slice(0, visibleThreads).map(thread => (
                         <div key={thread.id} className="border-b border-gray-600 px-4">
                             <div className="flex my-5 space-x-3 ">
                                 <Avatar>
@@ -110,9 +114,19 @@ export function Thread_List() {
                                     </div>
                                 </div>
                             </div>
+
+                            {visibleThreads < threads.length && (
+                                <div className="w-full flex justify-center">
+                                    <button onClick={loadMoreThreads}
+                                        className="hover:text-blue-400 font-bold w-full max-w-30 rounded-2xl text-white cursor-pointer my-2">
+                                        Load More
+                                    </button>
+                                </div>
+                            )}
                         </div>
                     ))
                 )}
+
             </ScrollArea>
         </aside>
     );
