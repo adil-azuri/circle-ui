@@ -115,16 +115,16 @@ export function Thread_List() {
                                 </div>
                             </div>
 
-                            {visibleThreads < threads.length && (
-                                <div className="w-full flex justify-center">
-                                    <button onClick={loadMoreThreads}
-                                        className="hover:text-blue-400 font-bold w-full max-w-30 rounded-2xl text-white cursor-pointer my-2">
-                                        Load More
-                                    </button>
-                                </div>
-                            )}
                         </div>
                     ))
+                )}
+                {visibleThreads < threads.length && (
+                    <div className="w-full flex justify-center">
+                        <button onClick={loadMoreThreads}
+                            className="hover:text-blue-400 text w-full max-w-30 rounded-2xl text-white cursor-pointer my-2">
+                            Load More
+                        </button>
+                    </div>
                 )}
 
             </ScrollArea>
