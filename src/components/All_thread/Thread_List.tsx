@@ -15,7 +15,7 @@ export function Thread_List() {
     const navigate = useNavigate();
     const [threads, setThreads] = useState<Thread[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const [visibleThreads, setVisibleThreads] = useState<number>(5); // State untuk jumlah thread yang ditampilkan
+    const [visibleThreads, setVisibleThreads] = useState<number>(5);
     const baseUrl = `http://localhost:3000/uploads/`;
     const wsUrl = "ws://localhost:3000";
     const { showSnackbar } = useSnackBar();
