@@ -1,25 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import { api } from "../../api/api";
+import { useAuth } from "../hooks/useAuth";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { api } from "../api/api";
 import Cookies from "js-cookie";
 import Swal from 'sweetalert2';
+import { Label } from "@radix-ui/react-label";
 
-export default function Login() {
+export default function Register() {
     const { auth } = useAuth();
     const navigate = useNavigate();
 
-    const [usernameOrEmail, setUsernameOrEmail] = useState("");
+    const [username, setUsername] = useState("");
+    const [full_name, setFull_name] = useState("");
+    const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleLogin = async (e: React.FormEvent) => {
+    const handleRegister = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
-            await api.post("/auth/login", {
-                usernameOrEmail,
+            await api.post("/auth/register", {
+                username,
+                full_name,
+                email,
                 password
             }, { withCredentials: true });
 
@@ -31,7 +36,7 @@ export default function Login() {
 
                 Swal.fire({
                     title: 'Success!',
-                    text: 'You have successfully logged in.',
+                    text: 'Register success',
                     icon: 'success',
                     confirmButtonText: 'OK'
                 }).then(() => {
@@ -51,7 +56,7 @@ export default function Login() {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'Login failed. Please try again.',
+                    text: `Registration failed: ${error.response.data.message || 'Please try again.'}`,
                     icon: 'error',
                     confirmButtonText: 'Try Again'
                 });
@@ -62,25 +67,51 @@ export default function Login() {
     return (
         <div className="flex items-center justify-center min-h-screen bg-zinc-900">
             <form
-                onSubmit={handleLogin}
+                onSubmit={handleRegister}
                 className="w-full max-w-md p-6 rounded shadow space-y-4"
             >
                 <h1 className="text-4xl font-bold text-green-500">Circle</h1>
-                <h2 className="text-lg text-white">Login to Circle</h2>
+                <h2 className="text-lg text-white">Register to Circle</h2>
 
                 <div>
+                    <Label htmlFor="username" className="text-gray-300 text-sm">Username</Label>
                     <Input
-                        id="usernameOrEmail"
+                        id="username"
                         type="text"
-                        placeholder="Insert Email/Username*"
-                        value={usernameOrEmail}
-                        onChange={(e) => setUsernameOrEmail(e.target.value)}
+                        placeholder="Insert Username*"
+                        value={username}
+                        onChange={(e) => setUsername(e.target.value)}
+                        required
+                        className="border border-gray-500 rounded p-5 text-gray-300"
+                    />
+                </div>
+                <div>
+                    <Label htmlFor="full_name" className="text-gray-300 text-sm">Full Name</Label>
+                    <Input
+                        id="full_name"
+                        type="text"
+                        placeholder="Insert Full Name*"
+                        value={full_name}
+                        onChange={(e) => setFull_name(e.target.value)}
+                        required
+                        className="border border-gray-500 rounded p-5 text-gray-300"
+                    />
+                </div>
+                <div>
+                    <Label htmlFor="email" className="text-gray-300 text-sm">Email</Label>
+                    <Input
+                        id="email"
+                        type="email"
+                        placeholder="Insert Email*"
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
                         required
                         className="border border-gray-500 rounded p-5 text-gray-300"
                     />
                 </div>
 
                 <div>
+                    <Label htmlFor="password" className="text-gray-300 text-sm">Password</Label>
                     <Input
                         id="password"
                         type="password"
@@ -91,15 +122,13 @@ export default function Login() {
                         className="border border-gray-500 rounded p-5 text-gray-300"
                     />
                 </div>
-                <p className="text-sm text-end text-gray-200 mt-4">
-                    <a href="/reset-password" className="text-green-500">Forgot Password?</a>
-                </p>
+
                 <Button type="submit" className="w-full bg-green-500 hover:bg-green-600 text-white rounded-3xl">
-                    Login
+                    Register
                 </Button>
 
                 <p className="text-sm text-center text-gray-600 mt-4">
-                    Already have an account? <a href="/register" className="text-green-500">Create an account</a>
+                    Already have an account? <a href="/login" className="text-green-500">Login</a>
                 </p>
             </form>
         </div>

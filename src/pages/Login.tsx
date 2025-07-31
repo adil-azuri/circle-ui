@@ -1,27 +1,25 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../../hooks/useAuth";
-import { Button } from "../../components/ui/button";
-import { Input } from "../../components/ui/input";
-import { api } from "../../api/api";
+import { useAuth } from "../hooks/useAuth";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { api } from "../api/api";
 import Cookies from "js-cookie";
 import Swal from 'sweetalert2';
 
-export default function Register() {
+export default function Login() {
     const { auth } = useAuth();
     const navigate = useNavigate();
 
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
+    const [usernameOrEmail, setUsernameOrEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    const handleRegister = async (e: React.FormEvent) => {
+    const handleLogin = async (e: React.FormEvent) => {
         e.preventDefault();
 
         try {
-            await api.post("/auth/register", {
-                username,
-                email,
+            await api.post("/auth/login", {
+                usernameOrEmail,
                 password
             }, { withCredentials: true });
 
@@ -32,10 +30,9 @@ export default function Register() {
                 auth(token);
 
                 Swal.fire({
-                    title: 'Success!',
-                    text: 'Register success',
+                    text: 'You have successfully logged in.',
                     icon: 'success',
-                    confirmButtonText: 'OK'
+                    timer: 1500
                 }).then(() => {
                     navigate("/home");
                 });
@@ -53,7 +50,7 @@ export default function Register() {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'Login failed. Please try again.',
+                    text: 'Login failed. Invalid username or password',
                     icon: 'error',
                     confirmButtonText: 'Try Again'
                 });
@@ -64,30 +61,19 @@ export default function Register() {
     return (
         <div className="flex items-center justify-center min-h-screen bg-zinc-900">
             <form
-                onSubmit={handleRegister}
+                onSubmit={handleLogin}
                 className="w-full max-w-md p-6 rounded shadow space-y-4"
             >
                 <h1 className="text-4xl font-bold text-green-500">Circle</h1>
-                <h2 className="text-lg text-white">Register to Circle</h2>
+                <h2 className="text-lg text-white">Login to Circle</h2>
 
                 <div>
                     <Input
-                        id="username"
+                        id="usernameOrEmail"
                         type="text"
-                        placeholder="Insert Username*"
-                        value={username}
-                        onChange={(e) => setUsername(e.target.value)}
-                        required
-                        className="border border-gray-500 rounded p-5 text-gray-300"
-                    />
-                </div>
-                <div>
-                    <Input
-                        id="email"
-                        type="email"
-                        placeholder="Insert Email*"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
+                        placeholder="Insert Email/Username*"
+                        value={usernameOrEmail}
+                        onChange={(e) => setUsernameOrEmail(e.target.value)}
                         required
                         className="border border-gray-500 rounded p-5 text-gray-300"
                     />
@@ -104,13 +90,15 @@ export default function Register() {
                         className="border border-gray-500 rounded p-5 text-gray-300"
                     />
                 </div>
-
+                <p className="text-sm text-end text-gray-200 mt-4">
+                    <a href="/reset-password" className="text-green-500">Forgot Password?</a>
+                </p>
                 <Button type="submit" className="w-full bg-green-500 hover:bg-green-600 text-white rounded-3xl">
-                    Register
+                    Login
                 </Button>
 
                 <p className="text-sm text-center text-gray-600 mt-4">
-                    Already have an account? <a href="/login" className="text-green-500">Login</a>
+                    Not have an account? <a href="/register" className="text-green-500">Create an account</a>
                 </p>
             </form>
         </div>
