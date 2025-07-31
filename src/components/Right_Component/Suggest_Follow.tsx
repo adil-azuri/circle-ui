@@ -1,5 +1,5 @@
 import { api } from "@/api/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useSelector } from 'react-redux';
 import { ScrollArea } from "../ui/scroll-area";
 import { FollowUnfollowButton } from "@/props/follow_unfollow_toggle";
@@ -14,6 +14,7 @@ interface User {
 export function Suggest_Follow() {
     const [loading, setLoading] = useState<boolean>(true);
     const [users, setUsers] = useState<User[]>([]);
+    const [recentlyFollowed, setRecentlyFollowed] = useState<number[]>([]);
     const baseUrl = `http://localhost:3000/uploads/`;
     const account = useSelector((state: any) => state.user.account);
 
@@ -24,6 +25,9 @@ export function Suggest_Follow() {
             let allUsers = res.data.all_user || [];
             if (account) {
                 allUsers = allUsers.filter(u => u.id !== account.id);
+                if (account.following && Array.isArray(account.following)) {
+                    allUsers = allUsers.filter(u => !account.following.includes(u.id) || recentlyFollowed.includes(u.id));
+                }
             }
             setUsers(allUsers);
         } catch (err) {
@@ -36,7 +40,17 @@ export function Suggest_Follow() {
 
     useEffect(() => {
         fetchUsers();
+    }, [account, recentlyFollowed]);
+
+    const handleFollow = useCallback((followId: number) => {
+        setRecentlyFollowed(prev => [...prev, followId]);
+        setTimeout(() => {
+            setRecentlyFollowed(prev => prev.filter(id => id !== followId));
+            setUsers(prevUsers => prevUsers.filter(user => user.id !== followId));
+        }, 7000);
     }, []);
+
+    const filteredUsers = users;
 
     return (
         <aside className="rounded-lg h-full">
@@ -47,10 +61,10 @@ export function Suggest_Follow() {
                 <ul className="space-y-4 p-2 max-h-60 hide-scrollbar">
                     {loading ? (
                         <li className="text-gray-400 px-3 py-2">Loading suggestions...</li>
-                    ) : users.length === 0 ? (
+                    ) : filteredUsers.length === 0 ? (
                         <li className="text-gray-400 px-3 py-2">No suggestions available.</li>
                     ) : (
-                        users.map((user) => (
+                        filteredUsers.map((user) => (
                             <li key={user.username} className="flex items-center justify-between bg-transparent hover:bg-gray-800 rounded-md transition-colors">
                                 <div className="flex items-center">
                                     <div className="w-9 h-10 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
@@ -71,6 +85,7 @@ export function Suggest_Follow() {
                                 </div>
                                 <FollowUnfollowButton
                                     followId={user.id}
+                                    onFollow={() => handleFollow(user.id)}
                                 />
                             </li>
                         ))

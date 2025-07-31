@@ -3,12 +3,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { followUser, unfollowUser } from '@/store/slices/userSlice';
 import { useSnackBar } from '@/context/SnackBarContext';
 
+
 interface FollowUnfollowButtonProps {
     followId: number; // ID of the user to follow/unfollow
+    onFollow?: () => void; // Optional callback after successful follow
 }
 
 
-export const FollowUnfollowButton: React.FC<FollowUnfollowButtonProps> = ({ followId }) => {
+export const FollowUnfollowButton: React.FC<FollowUnfollowButtonProps> = ({ followId, onFollow }) => {
     const dispatch = useDispatch();
     const account = useSelector((state: any) => state.user.account);
     const { showSnackbar } = useSnackBar();
@@ -19,6 +21,9 @@ export const FollowUnfollowButton: React.FC<FollowUnfollowButtonProps> = ({ foll
             if (!isFollowing) {
                 await dispatch(followUser({ follow_id: followId }) as any);
                 showSnackbar("You are now following a user!");
+                if (onFollow) {
+                    onFollow();
+                }
             } else {
                 await dispatch(unfollowUser({ unfollow_id: followId }) as any);
                 showSnackbar("You have unfollowed a user.");
