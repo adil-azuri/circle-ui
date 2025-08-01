@@ -8,8 +8,10 @@ import Swal from 'sweetalert2';
 
 interface LoginResponse {
     data: {
-        token: string;
-    };
+        data: {
+            token: string;
+        };
+    }
 }
 
 export default function Login() {
@@ -30,7 +32,7 @@ export default function Login() {
             }, { withCredentials: true });
             console.log("Login response", response);
 
-            const token = response.data.data.token;
+            const token = response.data.data.data.token;
             console.log("Token from response:", token);
 
             if (token) {
