@@ -15,6 +15,7 @@ export default function Login() {
     const [password, setPassword] = useState("");
 
     const handleLogin = async (e: React.FormEvent) => {
+        console.log("handleLogin called");
         e.preventDefault();
 
         try {
