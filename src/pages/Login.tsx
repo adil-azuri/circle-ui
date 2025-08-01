@@ -19,12 +19,15 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            await api.post("/auth/login", {
+            console.log("Sending login request", { usernameOrEmail, password });
+            const response = await api.post("/auth/login", {
                 usernameOrEmail,
                 password
             }, { withCredentials: true });
+            console.log("Login response", response);
 
             const token = Cookies.get("token");
+            console.log("Token from cookies:", token);
 
             if (token) {
                 localStorage.setItem("token", token);
@@ -37,6 +40,8 @@ export default function Login() {
                 }).then(() => {
                     navigate("/home");
                 });
+            } else {
+                console.warn("No token found in cookies after login");
             }
         } catch (error: any) {
             console.error("Login error:", error);
