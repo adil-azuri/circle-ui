@@ -19,8 +19,8 @@ const LikeButton: React.FC<LikeButtonProps> = ({ threadId, likes, setLikes }) =>
 
     const initialIsLiked = account?.likedThreads?.includes(threadId) ?? false;
     const [isLiked, setIsLiked] = React.useState(initialIsLiked);
+    const [isLoading, setIsLoading] = React.useState(false);
 
-    const wsUrl = "ws://localhost:3000";
     const { showSnackbar } = useSnackBar();
 
     React.useEffect(() => {
@@ -36,9 +36,11 @@ const LikeButton: React.FC<LikeButtonProps> = ({ threadId, likes, setLikes }) =>
         }
     };
 
-    useWebSocket(wsUrl, handleWebSocketMessage);
+    useWebSocket("wss://circle-api-adil.vercel.app", handleWebSocketMessage);
 
     const handleToggleLike = async () => {
+        if (isLoading) return;
+        setIsLoading(true);
         const newIsLiked = !isLiked;
         const newLikesCount = newIsLiked ? likes + 1 : likes - 1;
         setIsLiked(newIsLiked);
@@ -46,30 +48,33 @@ const LikeButton: React.FC<LikeButtonProps> = ({ threadId, likes, setLikes }) =>
 
         try {
             if (newIsLiked) {
-                await api.post(`/thread/like`, { thread_id: threadId });
+                await api.post(`thread/like`, { thread_id: threadId });
                 dispatch(addLikedThread(threadId));
             } else {
-                await api.post(`/thread/unlike`, { thread_id: threadId });
+                await api.post(`thread/unlike`, { thread_id: threadId });
                 dispatch(removeLikedThread(threadId));
             }
         } catch (error: any) {
             setIsLiked(!newIsLiked);
             setLikes(likes);
             if (error.response && error.response.status === 409) {
-
+                // Handle conflict error silently or show message
             } else {
                 console.error("Failed to update like status:", error);
             }
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
         <div className="flex items-center space-x-1">
             <button
-                className={`size-6 flex items-center justify-center rounded-full transition-colors duration-200 ${isLiked ? ' border-red-400' : ' border-gray-300'}`}
+                className={`size-6 flex items-center justify-center rounded-full transition-colors duration-200 ${isLiked ? ' border-red-400 bg-red-100' : ' border-gray-300'}`}
                 onClick={handleToggleLike}
                 aria-pressed={isLiked}
                 aria-label={isLiked ? 'Unlike' : 'Like'}
+                disabled={isLoading}
             >
                 <img src={isLiked ? love : unlove} alt={isLiked ? 'liked' : 'unliked'} className="size-4" />
             </button>

@@ -5,8 +5,8 @@ import { useSnackBar } from '@/context/SnackBarContext';
 
 
 interface FollowUnfollowButtonProps {
-    followId: number; // ID of the user to follow/unfollow
-    onFollow?: () => void; // Optional callback after successful follow
+    followId: number;
+    onFollow?: () => void;
 }
 
 
