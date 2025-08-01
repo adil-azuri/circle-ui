@@ -20,11 +20,17 @@ export default function Login() {
 
         try {
             console.log("Sending login request", { usernameOrEmail, password });
-            const response = await api.post("/auth/login", {
-                usernameOrEmail,
-                password
-            }, { withCredentials: true });
-            console.log("Login response", response);
+            let response;
+            try {
+                response = await api.post("/auth/login", {
+                    usernameOrEmail,
+                    password
+                }, { withCredentials: true });
+                console.log("Login response", response);
+            } catch (innerError) {
+                console.error("Error during api.post call:", innerError);
+                throw innerError;
+            }
 
             const token = Cookies.get("token");
             console.log("Token from cookies:", token);
