@@ -19,7 +19,6 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            console.log("Sending login request", { usernameOrEmail, password });
             let response;
             try {
                 response = await api.post("/auth/login", {
@@ -32,23 +31,31 @@ export default function Login() {
                 throw innerError;
             }
 
-            const token = Cookies.get("token");
-            console.log("Token from cookies:", token);
+            setTimeout(() => {
+                const token = Cookies.get("token");
+                console.log("Token from cookies:", token);
 
-            if (token) {
-                localStorage.setItem("token", token);
-                auth(token);
+                if (token) {
+                    localStorage.setItem("token", token);
+                    auth(token);
 
-                Swal.fire({
-                    text: 'You have successfully logged in.',
-                    icon: 'success',
-                    timer: 1500
-                }).then(() => {
-                    navigate("/home");
-                });
-            } else {
-                console.warn("No token found in cookies after login");
-            }
+                    Swal.fire({
+                        text: 'You have successfully logged in.',
+                        icon: 'success',
+                        timer: 1500
+                    }).then(() => {
+                        navigate("/home");
+                    });
+                } else {
+                    console.warn("No token found in cookies after login");
+                    Swal.fire({
+                        title: 'Error!',
+                        text: 'No token found in cookies after login.',
+                        icon: 'error',
+                        confirmButtonText: 'Try Again'
+                    });
+                }
+            }, 100); // 100ms delay to allow cookie to be set
         } catch (error: any) {
             console.error("Login error:", error);
 
