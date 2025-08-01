@@ -4,8 +4,11 @@ import { useAuth } from "../hooks/useAuth";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { api } from "../api/api";
-import Cookies from "js-cookie";
 import Swal from 'sweetalert2';
+
+interface LoginResponse {
+    token: string;
+}
 
 export default function Login() {
     const { auth } = useAuth();
@@ -19,43 +22,29 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            let response;
-            try {
-                response = await api.post("/auth/login", {
-                    usernameOrEmail,
-                    password
-                }, { withCredentials: true });
-                console.log("Login response", response);
-            } catch (innerError) {
-                console.error("Error during api.post call:", innerError);
-                throw innerError;
+            let response = await api.post<LoginResponse>("/auth/login", {
+                usernameOrEmail,
+                password
+            }, { withCredentials: true });
+            console.log("Login response", response);
+
+            const token = response.data.token;
+            console.log("Token from response:", token);
+
+            if (token) {
+                localStorage.setItem("token", token);
+                auth(token);
+
+                Swal.fire({
+                    text: 'You have successfully logged in.',
+                    icon: 'success',
+                    timer: 1500
+                }).then(() => {
+                    navigate("/home");
+                });
+            } else {
+                console.warn("No token found in response after login");
             }
-
-            setTimeout(() => {
-                const token = Cookies.get("token");
-                console.log("Token from cookies:", token);
-
-                if (token) {
-                    localStorage.setItem("token", token);
-                    auth(token);
-
-                    Swal.fire({
-                        text: 'You have successfully logged in.',
-                        icon: 'success',
-                        timer: 1500
-                    }).then(() => {
-                        navigate("/home");
-                    });
-                } else {
-                    console.warn("No token found in cookies after login");
-                    Swal.fire({
-                        title: 'Error!',
-                        text: 'No token found in cookies after login.',
-                        icon: 'error',
-                        confirmButtonText: 'Try Again'
-                    });
-                }
-            }, 100); // 100ms delay to allow cookie to be set
         } catch (error: any) {
             console.error("Login error:", error);
 
