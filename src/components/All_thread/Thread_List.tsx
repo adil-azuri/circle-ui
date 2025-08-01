@@ -16,8 +16,7 @@ export function Thread_List() {
     const [threads, setThreads] = useState<Thread[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [visibleThreads, setVisibleThreads] = useState<number>(5);
-    const baseUrl = `http://localhost:3000/uploads/`;
-    const wsUrl = "ws://localhost:3000";
+    const baseUrl = "https://circle-api-adil.vercel.app/uploads/";
     const { showSnackbar } = useSnackBar();
 
     useEffect(() => {
@@ -56,7 +55,7 @@ export function Thread_List() {
         }
     };
 
-    useWebSocket(wsUrl, handleWebSocketMessage);
+    useWebSocket("wss://circle-api-adil.vercel.app", handleWebSocketMessage);
 
     const loadMoreThreads = () => {
         setVisibleThreads(prev => prev + 5);

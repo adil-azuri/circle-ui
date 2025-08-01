@@ -1,40 +1,42 @@
-// useWebSocket.ts
 import { useEffect, useRef } from "react";
 
-export const useWebSocket = (url: string, onMessage: (message: any) => void) => {
-    const socketRef = useRef<WebSocket | null>(null);
+export const useWebSocket = (
+    url: string,
+    onMessage: (message: any) => void
+) => {
+    const wsRef = useRef<WebSocket | null>(null);
 
     useEffect(() => {
-        const newSocket = new WebSocket(url);
+        if (!url) return;
 
-        newSocket.onopen = () => {
+        const ws = new WebSocket(url);
+        wsRef.current = ws;
+
+        ws.onopen = () => {
             console.log("WebSocket connection established");
         };
 
-        newSocket.onmessage = (event) => {
+        ws.onmessage = (event) => {
             try {
-                const message = JSON.parse(event.data.toString());
-                onMessage(message);
+                const data = JSON.parse(event.data);
+                onMessage(data);
             } catch (error) {
-                console.error("Failed to parse WebSocket message:", error, event.data);
+                console.error("Failed to parse WebSocket message:", error);
             }
         };
 
-        newSocket.onclose = () => {
-            console.log("WebSocket connection closed");
+        ws.onclose = (event) => {
+            console.log("WebSocket connection closed:", event.reason);
         };
 
-        newSocket.onerror = (error) => {
+        ws.onerror = (error) => {
             console.error("WebSocket error:", error);
         };
 
-        socketRef.current = newSocket;
-
         return () => {
-            if (socketRef.current && socketRef.current.readyState === WebSocket.OPEN) {
-                socketRef.current.close();
+            if (wsRef.current) {
+                wsRef.current.close();
             }
-            socketRef.current = null;
         };
     }, [url, onMessage]);
 };
