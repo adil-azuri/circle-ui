@@ -22,7 +22,6 @@ export default function Login() {
     const [password, setPassword] = useState("");
 
     const handleLogin = async (e: React.FormEvent) => {
-        console.log("handleLogin called");
         e.preventDefault();
 
         try {
@@ -30,10 +29,8 @@ export default function Login() {
                 usernameOrEmail,
                 password
             }, { withCredentials: true });
-            console.log("Login response", response);
 
             const token = response.data.data.data.token;
-            console.log("Token from response:", token);
 
             if (token) {
                 localStorage.setItem("token", token);
