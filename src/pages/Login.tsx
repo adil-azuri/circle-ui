@@ -30,7 +30,7 @@ export default function Login() {
                 password
             }, { withCredentials: true });
 
-            const token = response.data.data.data.token;
+            const token = response.data?.data?.data?.token;
 
             if (token) {
                 localStorage.setItem("token", token);
