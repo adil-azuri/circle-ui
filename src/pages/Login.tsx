@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { api } from "../api/api";
@@ -15,7 +14,6 @@ interface LoginResponse {
 }
 
 export default function Login() {
-    const { auth } = useAuth();
     const navigate = useNavigate();
 
     const [usernameOrEmail, setUsernameOrEmail] = useState("");
@@ -34,7 +32,6 @@ export default function Login() {
 
             if (token) {
                 localStorage.setItem("token", token);
-                auth(token);
 
                 Swal.fire({
                     text: 'You have successfully logged in.',
