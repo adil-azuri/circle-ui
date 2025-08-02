@@ -6,6 +6,14 @@ import { api } from "../api/api";
 import Swal from 'sweetalert2';
 import Cookies from "js-cookie";
 
+interface LoginResponse {
+    data: {
+        data: {
+            token: string;
+        };
+    }
+}
+
 export default function Login() {
     const navigate = useNavigate();
 
@@ -16,12 +24,16 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            await api.post("/auth/login", {
+            const response = await api.post<LoginResponse>("/auth/login", {
                 usernameOrEmail,
                 password
             }, { withCredentials: true });
 
-            const token = Cookies.get("token");
+            let token = Cookies.get("token");
+
+            if (!token) {
+                token = response.data?.data?.data?.token;
+            }
 
             if (token) {
                 localStorage.setItem("token", token);
@@ -34,7 +46,7 @@ export default function Login() {
                     navigate("/home");
                 });
             } else {
-                console.warn("No token found in cookies after login");
+                console.warn("No token found in cookies or response body after login");
                 Swal.fire({
                     title: 'Error!',
                     text: 'Login failed. Token not received.',

@@ -8,6 +8,14 @@ import Cookies from "js-cookie";
 import Swal from 'sweetalert2';
 import { Label } from "@radix-ui/react-label";
 
+interface RegisterResponse {
+    data: {
+        data: {
+            token: string;
+        };
+    }
+}
+
 export default function Register() {
     const { auth } = useAuth();
     const navigate = useNavigate();
@@ -21,14 +29,20 @@ export default function Register() {
         e.preventDefault();
 
         try {
-            await api.post("/auth/register", {
+            const response = await api.post<RegisterResponse>("/auth/register", {
                 username,
                 full_name,
                 email,
                 password
             }, { withCredentials: true });
 
-            const token = Cookies.get("token");
+            // Try to get token from cookies first
+            let token = Cookies.get("token");
+
+            // If not in cookies, try to get from response body
+            if (!token) {
+                token = response.data?.data?.data?.token;
+            }
 
             if (token) {
                 localStorage.setItem("token", token);
@@ -42,21 +56,29 @@ export default function Register() {
                 }).then(() => {
                     navigate("/home");
                 });
+            } else {
+                console.warn("No token found in cookies or response body after registration");
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Registration failed. Token not received.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
             }
         } catch (error: any) {
-            console.error("Login error:", error);
+            console.error("Registration error:", error);
 
             if (error.response && error.response.status === 401) {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'Invalid username or password.',
+                    text: 'Invalid registration data.',
                     icon: 'error',
                     confirmButtonText: 'Try Again'
                 });
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: `Registration failed: ${error.response.data.message || 'Please try again.'}`,
+                    text: `Registration failed: ${error.response?.data?.message || 'Please try again.'}`,
                     icon: 'error',
                     confirmButtonText: 'Try Again'
                 });
