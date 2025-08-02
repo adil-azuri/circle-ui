@@ -8,10 +8,8 @@ import Cookies from "js-cookie";
 
 interface LoginResponse {
     data: {
-        data: {
-            token: string;
-        };
-    }
+        token: string;
+    };
 }
 
 export default function Login() {
@@ -32,7 +30,7 @@ export default function Login() {
             let token = Cookies.get("token");
 
             if (!token) {
-                token = response.data?.data?.data?.token;
+                token = response.data?.data?.token;
             }
 
             if (token) {

@@ -10,10 +10,8 @@ import { Label } from "@radix-ui/react-label";
 
 interface RegisterResponse {
     data: {
-        data: {
-            token: string;
-        };
-    }
+        token: string;
+    };
 }
 
 export default function Register() {
@@ -36,12 +34,10 @@ export default function Register() {
                 password
             }, { withCredentials: true });
 
-            // Try to get token from cookies first
             let token = Cookies.get("token");
 
-            // If not in cookies, try to get from response body
             if (!token) {
-                token = response.data?.data?.data?.token;
+                token = response.data?.data?.token;
             }
 
             if (token) {
