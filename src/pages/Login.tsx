@@ -4,8 +4,11 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { api } from "../api/api";
 import Swal from 'sweetalert2';
+import Cookies from "js-cookie";
 
 interface LoginResponse {
+    // Response structure might vary, but we'll focus on getting token from cookies
+    // Keeping this interface for type safety
     data: {
         data: {
             token: string;
@@ -23,12 +26,12 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            let response = await api.post<LoginResponse>("/auth/login", {
+            await api.post<LoginResponse>("/auth/login", {
                 usernameOrEmail,
                 password
             }, { withCredentials: true });
 
-            const token = response.data?.data?.data?.token;
+            const token = Cookies.get("token");
 
             if (token) {
                 localStorage.setItem("token", token);
@@ -41,7 +44,13 @@ export default function Login() {
                     navigate("/home");
                 });
             } else {
-                console.warn("No token found in response after login");
+                console.warn("No token found in cookies after login");
+                Swal.fire({
+                    title: 'Error!',
+                    text: 'Login failed. Token not received.',
+                    icon: 'error',
+                    confirmButtonText: 'Try Again'
+                });
             }
         } catch (error: any) {
             console.error("Login error:", error);
@@ -56,7 +65,7 @@ export default function Login() {
             } else {
                 Swal.fire({
                     title: 'Error!',
-                    text: 'Login failed. Invalid username or password',
+                    text: 'Login failed. Please try again.',
                     icon: 'error',
                     confirmButtonText: 'Try Again'
                 });

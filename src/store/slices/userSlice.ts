@@ -11,8 +11,6 @@ const initialState: UserState = {
     error: null,
 };
 
-
-// Async thunk to fetch user data
 export const fetchUser = createAsyncThunk<UserAccount, string, { rejectValue: string }>(
     'user/fetchUser',
     async (userId, { rejectWithValue }) => {
@@ -25,7 +23,6 @@ export const fetchUser = createAsyncThunk<UserAccount, string, { rejectValue: st
     }
 );
 
-// Async thunk to update user profile
 export const updateUserProfile = createAsyncThunk<UserAccount, FormData, { rejectValue: string }>(
     'user/updateUserProfile',
     async (formData, { rejectWithValue, getState }) => {
@@ -47,8 +44,6 @@ export const updateUserProfile = createAsyncThunk<UserAccount, FormData, { rejec
     }
 );
 
-
-// Async thunk to follow a user
 export const followUser = createAsyncThunk<void, FollowRequest, { rejectValue: string }>(
     'user/followUser',
     async (followRequest, { rejectWithValue }) => {
@@ -60,7 +55,6 @@ export const followUser = createAsyncThunk<void, FollowRequest, { rejectValue: s
     }
 );
 
-// Async thunk to unfollow a user
 export const unfollowUser = createAsyncThunk<void, UnfollowRequest, { rejectValue: string }>(
     'user/unfollowUser',
     async (unfollowRequest, { rejectWithValue }) => {
@@ -156,7 +150,6 @@ const userSlice = createSlice({
                 }
             })
             .addCase(followUser.rejected, (_, action) => {
-                // Handle error
                 console.error(action.payload);
             })
             .addCase(unfollowUser.fulfilled, (state, action) => {
@@ -165,7 +158,6 @@ const userSlice = createSlice({
                 }
             })
             .addCase(unfollowUser.rejected, (_, action) => {
-                // Handle error
                 console.error(action.payload);
             });
 
