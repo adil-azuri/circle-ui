@@ -6,16 +6,6 @@ import { api } from "../api/api";
 import Swal from 'sweetalert2';
 import Cookies from "js-cookie";
 
-interface LoginResponse {
-    // Response structure might vary, but we'll focus on getting token from cookies
-    // Keeping this interface for type safety
-    data: {
-        data: {
-            token: string;
-        };
-    }
-}
-
 export default function Login() {
     const navigate = useNavigate();
 
@@ -26,7 +16,7 @@ export default function Login() {
         e.preventDefault();
 
         try {
-            await api.post<LoginResponse>("/auth/login", {
+            await api.post("/auth/login", {
                 usernameOrEmail,
                 password
             }, { withCredentials: true });
