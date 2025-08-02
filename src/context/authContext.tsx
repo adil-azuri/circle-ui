@@ -6,9 +6,10 @@ export const AuthContext = createContext<AuthContextType | null>(null);
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
     const [token, setToken] = useState<string | null>(null);
+    const [isInitialized, setIsInitialized] = useState(false);
 
     useEffect(() => {
-        let tokenFromStorage: string | null | undefined = Cookies.get("token");
+        let tokenFromStorage: any = Cookies.get("token");
         if (!tokenFromStorage) {
             tokenFromStorage = localStorage.getItem("token");
         }
@@ -21,6 +22,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
                 Cookies.set("token", tokenValue, { expires: 7 });
             }
         }
+        setIsInitialized(true);
     }, []);
 
     const auth = (newToken: string) => {
@@ -36,7 +38,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <AuthContext.Provider value={{ token, auth, logout }}>
+        <AuthContext.Provider value={{ token, auth, logout, isInitialized }}>
             {children}
         </AuthContext.Provider>
     );
