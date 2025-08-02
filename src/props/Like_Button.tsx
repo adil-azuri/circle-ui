@@ -36,7 +36,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ threadId, likes, setLikes }) =>
         }
     };
 
-    useWebSocket("wss://circle-api-adil.vercel.app", handleWebSocketMessage);
+    useWebSocket("wss://circle-api-adil.vercel.app/socket.io/?EIO=4&transport=websocket", handleWebSocketMessage);
 
     const handleToggleLike = async () => {
         if (isLoading) return;

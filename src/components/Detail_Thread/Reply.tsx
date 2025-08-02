@@ -11,8 +11,8 @@ import { useWebSocket } from "@/hooks/web_socket";
 export function Reply_Thread() {
     const [replies, setReplies] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const baseUrl = `http://localhost:3000/uploads/`;
-    const wsUrl = "ws://localhost:3000";
+    const baseUrl = `https://circle-api-adil.vercel.app/uploads/`;
+    const wsUrl = "wss://circle-api-adil.vercel.app/socket.io/?EIO=4&transport=websocket";
     const { id } = useParams();
     const { showSnackbar } = useSnackBar();
 

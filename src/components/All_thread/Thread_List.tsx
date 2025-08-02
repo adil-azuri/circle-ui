@@ -55,7 +55,7 @@ export function Thread_List() {
         }
     };
 
-    useWebSocket("wss://circle-api-adil.vercel.app", handleWebSocketMessage);
+    useWebSocket("wss://circle-api-adil.vercel.app/socket.io/?EIO=4&transport=websocket", handleWebSocketMessage);
 
     const loadMoreThreads = () => {
         setVisibleThreads(prev => prev + 5);
