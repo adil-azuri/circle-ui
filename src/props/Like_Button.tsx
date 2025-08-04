@@ -6,6 +6,7 @@ import unlove from '@/assets/unlove.svg'
 import { addLikedThread, removeLikedThread } from '@/store/slices/userSlice';
 import { useWebSocket } from "@/hooks/web_socket";
 import { useSnackBar } from '@/context/SnackBarContext';
+import { WEBSOCKET_URL } from "@/lib/constants";
 
 interface LikeButtonProps {
     threadId: number;
@@ -36,7 +37,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ threadId, likes, setLikes }) =>
         }
     };
 
-    useWebSocket("wss://circle-api-adil.vercel.app", handleWebSocketMessage);
+    useWebSocket(WEBSOCKET_URL, handleWebSocketMessage);
 
     const handleToggleLike = async () => {
         if (isLoading) return;

@@ -12,11 +12,6 @@ export default defineConfig({
         changeOrigin: true,
         secure: false,
       },
-      '/socket.io': {
-        target: 'https://circle-api-adil.vercel.app',
-        changeOrigin: true,
-        ws: true,
-      },
     },
   },
   resolve: {

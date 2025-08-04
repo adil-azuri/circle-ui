@@ -9,6 +9,7 @@ import type { Thread } from "@/types/threadsType";
 import { useSnackBar } from '@/context/SnackBarContext';
 import { useWebSocket } from "@/hooks/web_socket";
 import LikeButton from '@/props/Like_Button';
+import { WEBSOCKET_URL } from "@/lib/constants";
 import ReplyCount from '@/props/Reply_Count';
 
 export function Thread_List() {
@@ -55,7 +56,7 @@ export function Thread_List() {
         }
     };
 
-    useWebSocket("wss://circle-api-adil.vercel.app", handleWebSocketMessage);
+    useWebSocket(WEBSOCKET_URL, handleWebSocketMessage);
 
     const loadMoreThreads = () => {
         setVisibleThreads(prev => prev + 5);

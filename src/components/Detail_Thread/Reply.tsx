@@ -7,12 +7,13 @@ import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { useSnackBar } from "@/context/SnackBarContext";
 import { useWebSocket } from "@/hooks/web_socket";
+import { WEBSOCKET_URL } from "@/lib/constants";
 
 export function Reply_Thread() {
     const [replies, setReplies] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const baseUrl = `https://circle-api-adil.vercel.app/uploads/`;
-    const wsUrl = "wss://circle-api-adil.vercel.app";
+    const wsUrl = WEBSOCKET_URL;
     const { id } = useParams();
     const { showSnackbar } = useSnackBar();
 
