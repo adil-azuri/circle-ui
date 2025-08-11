@@ -17,7 +17,6 @@ export function Thread_List() {
     const [threads, setThreads] = useState<Thread[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [visibleThreads, setVisibleThreads] = useState<number>(5);
-    const baseUrl = "https://circle-api-adil.vercel.app/uploads/";
     const { showSnackbar } = useSnackBar();
 
     useEffect(() => {
@@ -77,7 +76,7 @@ export function Thread_List() {
                             <div className="flex my-5 space-x-3 ">
                                 <Avatar>
                                     <AvatarImage className="object-cover"
-                                        src={thread.user.profile_picture ? `${baseUrl}${thread.user.profile_picture}` : avatar} />
+                                        src={thread.user.profile_picture ? thread.user.profile_picture : avatar} />
                                 </Avatar>
                                 <div className="w-full cursor-pointer">
                                     <div className="cursor-pointer"
@@ -91,7 +90,7 @@ export function Thread_List() {
                                         {thread.image && (
                                             <div className="">
                                                 <img
-                                                    src={`${baseUrl}${thread.image}`}
+                                                    src={thread.image}
                                                     className="w-full max-h-80 object-contain rounded-xl mt-3"
                                                     alt={thread.content || "Thread image"}
                                                 />
