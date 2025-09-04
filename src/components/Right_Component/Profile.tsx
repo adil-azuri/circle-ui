@@ -9,7 +9,6 @@ import { ProfileUpdateDialog } from './Update_Profile_Dialog';
 export function Profile() {
     const dispatch = useDispatch();
     const token = Cookies.get('token');
-    const baseUrl = `http://localhost:3000/uploads/`;
     const { account, isLoading, error } = useSelector((state: any) => state.user);
 
     useEffect(() => {
@@ -30,7 +29,7 @@ export function Profile() {
                             <div className="flex items-center justify-center w-full h-full text-xs text-gray-500">Loading...</div>
                         ) : (
                             <img
-                                src={account && account.photo_profile ? `${baseUrl}${account.photo_profile}` : avatar}
+                                src={account && account.photo_profile ? `${account.photo_profile}` : avatar}
                                 alt={account?.full_name || "User profile"}
                                 className="w-full h-full object-cover"
                             />

@@ -22,7 +22,7 @@ export function ProfileUpdateDialog() {
             setUsername(account.username || "");
             setFullName(account.full_name || "");
             setBio(account.bio || "");
-            setPhotoPreview(account.photo_profile ? `http://localhost:3000/uploads/${account.photo_profile}` : null);
+            setPhotoPreview(account.photo_profile ? `${account.photo_profile}` : null);
             setPhoto(null);
         }
     }, [isDialogOpen, account]);

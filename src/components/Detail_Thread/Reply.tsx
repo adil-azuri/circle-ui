@@ -12,7 +12,6 @@ import { WEBSOCKET_URL } from "@/lib/constants";
 export function Reply_Thread() {
     const [replies, setReplies] = useState<any>([]);
     const [loading, setLoading] = useState<boolean>(true);
-    const baseUrl = `https://circle-api-adil.vercel.app/uploads/`;
     const wsUrl = WEBSOCKET_URL;
     const { id } = useParams();
     const { showSnackbar } = useSnackBar();
@@ -80,7 +79,7 @@ export function Reply_Thread() {
                     <div key={reply.id} className="border-b border-gray-600 p-3 mb-2">
                         <div className="flex space-x-4">
                             <Avatar className="size-7">
-                                <AvatarImage src={reply.user.photo_profile ? `${baseUrl}${reply.user.photo_profile}` : avatar} />
+                                <AvatarImage src={reply.user.photo_profile ? `${reply.user.photo_profile}` : avatar} />
                             </Avatar>
                             <div className="flex gap-5 items-center mb-5">
                                 <p className="font-bold text-sm">{reply.user.full_name}</p>
@@ -91,7 +90,7 @@ export function Reply_Thread() {
                         <p className="text-sm mt-2">{reply.content}</p>
                         {reply.image && (
                             <img
-                                src={`${baseUrl}${reply.image}`}
+                                src={`${reply.image}`}
                                 className="w-full max-h-40 object-contain rounded-xl my-2"
                                 alt={reply.content || "reply image"}
                             />

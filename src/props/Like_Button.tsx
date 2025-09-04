@@ -71,7 +71,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ threadId, likes, setLikes }) =>
     return (
         <div className="flex items-center space-x-1">
             <button
-                className={`size-6 flex items-center justify-center rounded-full transition-colors duration-200 ${isLiked ? ' border-red-400 bg-red-100' : ' border-gray-300'}`}
+                className={`size-6 flex items-center justify-center rounded-full transition-colors duration-200 ${isLiked ? ' border-red-400' : ' border-gray-300'}`}
                 onClick={handleToggleLike}
                 aria-pressed={isLiked}
                 aria-label={isLiked ? 'Unlike' : 'Like'}
