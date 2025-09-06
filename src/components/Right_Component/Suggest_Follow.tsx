@@ -15,7 +15,6 @@ export function Suggest_Follow() {
     const [loading, setLoading] = useState<boolean>(true);
     const [users, setUsers] = useState<User[]>([]);
     const [recentlyFollowed, setRecentlyFollowed] = useState<number[]>([]);
-    const baseUrl = `http://localhost:3000/uploads/`;
     const account = useSelector((state: any) => state.user.account);
 
     const fetchUsers = async () => {
@@ -70,7 +69,7 @@ export function Suggest_Follow() {
                                     <div className="w-9 h-10 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
                                         {user.photo_profile ? (
                                             <img
-                                                src={`${baseUrl}${user.photo_profile}`}
+                                                src={`${user.photo_profile}`}
                                                 alt={`${user.full_name}'s profile`}
                                                 className="w-full h-full object-cover"
                                             />

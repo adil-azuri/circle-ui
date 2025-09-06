@@ -42,7 +42,7 @@ export function Select_Thread() {
     }
 
     return (
-        <ScrollArea className="h-full overflow-y-auto">
+        <ScrollArea className="h-90vh overflow-y-auto hide-scrollbar">
             <Card className="rounded-none border-none w-full">
                 <CardContent>
                     <div className="border-b border-gray-500">

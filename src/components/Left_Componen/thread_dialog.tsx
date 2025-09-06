@@ -3,6 +3,7 @@ import avatar from "@/assets/avatar.png";
 import { Avatar, AvatarImage } from "../ui/avatar";
 import { Dialog, DialogContent, DialogTrigger, DialogTitle, DialogDescription } from "../ui/dialog";
 import { handleThread } from "@/hooks/handleThread";
+import { useSelector } from "react-redux";
 
 export function Thread_Dialog() {
     const [content, setContent] = useState("");
@@ -11,6 +12,8 @@ export function Thread_Dialog() {
     const [errorMsg, setErrorMsg] = useState("");
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    const userPhoto = useSelector((state: any) => state.user.account?.photo_profile);
 
     const onSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -59,7 +62,7 @@ export function Thread_Dialog() {
                 <DialogDescription>
                     <div className="flex gap-4">
                         <Avatar className="mt-2 min-w-[40px] min-h-[40px]">
-                            <AvatarImage src={avatar} />
+                            <AvatarImage src={userPhoto ? userPhoto : avatar} />
                         </Avatar>
 
                         <form onSubmit={onSubmit} className="flex flex-col flex-grow space-y-4">

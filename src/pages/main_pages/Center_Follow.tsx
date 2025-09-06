@@ -12,7 +12,7 @@ export const Center_Follow = () => {
     const [activeTab, setActiveTab] = useState('follower');
 
     return (
-        <div className="shadow-lg border-gray-700 w-full">
+        <div className="flex flex-col h-full shadow-lg border-gray-700 w-full">
             <div className="px-4 pt-3">
                 <h1 className="text-2xl font-bold text-green-400 font-sans">Follow</h1>
 

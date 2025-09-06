@@ -2,6 +2,7 @@ import { useState } from "react";
 import avatar from "@/assets/avatar.png"
 import { Avatar, AvatarImage } from "@/components/ui/avatar";
 import { handleThread } from "@/hooks/handleThread";
+import { useSelector } from "react-redux";
 
 export function Thread_Post() {
     const [content, setContent] = useState("");
@@ -9,6 +10,8 @@ export function Thread_Post() {
     const [photoPreview, setPhotoPreview] = useState<string | null>(null);
     const [errorMsg, setErrorMsg] = useState("");
     const [isLoading, setIsLoading] = useState(false);
+
+    const userPhoto = useSelector((state: any) => state.user.account?.photo_profile);
 
     const onSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -42,7 +45,7 @@ export function Thread_Post() {
     return (
         <div className="p-3 flex mb-4 border-b border-gray-600 gap-5">
             <Avatar>
-                <AvatarImage src={avatar} />
+                <AvatarImage src={userPhoto ? userPhoto : avatar} />
             </Avatar>
             <form onSubmit={onSubmit} className="flex w-full space-y-3 space-x-3">
                 <div className="w-full">

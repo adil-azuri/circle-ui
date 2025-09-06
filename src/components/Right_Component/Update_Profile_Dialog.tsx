@@ -98,7 +98,7 @@ export function ProfileUpdateDialog() {
                     Edit Profile
                 </button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-lg bg-zinc-900 text-white border-none shadow-lg shadow-gray-800 p-0">
+            <DialogContent className="sm:max-w-lg bg-zinc-900 text-white border-none shadow-lg shadow-gray-800 p-0 absolute">
                 <div className="rounded-t-xl bg-gradient-to-r from-[#a3f7bf] via-[#fefcbf] to-[#f6d365] h-28 w-full relative flex flex-col items-center justify-end">
                     <div className="absolute -bottom-10 left-1/2 -translate-x-1/2">
                         <div className="w-20 h-20 rounded-full overflow-hidden bg-gray-200 border-4 border-[#1a1a1a] shadow-md flex items-center justify-center">

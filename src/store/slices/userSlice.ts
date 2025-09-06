@@ -108,10 +108,12 @@ const userSlice = createSlice({
                 if (Array.isArray(action.payload.following)) {
                     following = action.payload.following.map((f: any) => f.follower_id);
                 }
-                state.account = { ...action.payload, likedThreads, following };
+                // Add threads property if missing
+                const threads = action.payload.threads || [];
+                state.account = { ...action.payload, likedThreads, following, threads };
                 state.isLoading = false;
                 try {
-                    localStorage.setItem('user', JSON.stringify({ ...action.payload, likedThreads, following }));
+                    localStorage.setItem('user', JSON.stringify({ ...action.payload, likedThreads, following, threads }));
                 } catch (e) {
                     console.error("Failed to save user to localStorage", e);
                 }

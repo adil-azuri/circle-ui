@@ -4,12 +4,18 @@ import { Outlet } from 'react-router-dom';
 
 const Home = () => {
     return (
-        <div className='flex h-screen max-h-screen overflow-hidden w-full bg-zinc-900'>
-            <LeftSidebar />
-            <div className="flex min-h-0 h-screen text-white border-x border-gray-700 w-full ">
-                <Outlet />
+        <div className='flex h-screen max-h-screen overflow-hidden bg-zinc-900 justify-center'>
+            <div className="flex w-[1400px] ">
+                <div className="flex-shrink-0">
+                    <LeftSidebar />
+                </div>
+                <div className="flex flex-col min-h-screen h-screen text-white border-x border-gray-700 flex-grow">
+                    <Outlet />
+                </div>
+                <div>
+                    <RightSidebar />
+                </div>
             </div>
-            <RightSidebar />
         </div>
     );
 };

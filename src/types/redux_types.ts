@@ -8,6 +8,8 @@ export interface Like {
     updated_by: string | null;
 }
 
+import type { Thread } from './threadsType';
+
 export interface UserAccount {
     id: number;
     username: string;
@@ -24,6 +26,7 @@ export interface UserAccount {
     follower: any[];
     likes: Like[];
     likedThreads: number[];
+    threads?: Thread[];
 }
 
 export interface UserState {

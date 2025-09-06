@@ -79,7 +79,7 @@ const LikeButton: React.FC<LikeButtonProps> = ({ threadId, likes, setLikes }) =>
             >
                 <img src={isLiked ? love : unlove} alt={isLiked ? 'liked' : 'unliked'} className="size-4" />
             </button>
-            <span className=" text-md ">{likes} Likes</span>
+            <span className="text-base">{likes} Likes</span>
         </div>
     );
 };

@@ -20,7 +20,7 @@ interface search {
 }
 
 export function Center_Search() {
-    const [query, setQuery] = useState<string>('A');
+    const [query, setQuery] = useState<string>('');
     const [filteredItems, setFilteredItems] = useState<search[]>([]);
     const account = useSelector((state: any) => state.user.account);
 
@@ -49,7 +49,7 @@ export function Center_Search() {
     }, [query, debouncedFetchItems]);
 
     return (
-        <div className="w-full p-4 mx-auto mt-4">
+        <div className="flex flex-col h-full w-full p-4 mx-auto">
             <h1 className="text-2xl font-bold text-green-400 font-sans mb-3">Search User</h1>
             <div className="relative flex items-center">
                 <span className="absolute left-4 text-gray-400 text-lg">
@@ -69,7 +69,7 @@ export function Center_Search() {
                         <div className="flex items-center gap-3">
                             {item.photo_profile ? (
                                 <img
-                                    src={`http://localhost:3000/uploads/${item.photo_profile}`}
+                                    src={`${item.photo_profile}`}
                                     alt={item.full_name}
                                     className="w-10 h-10 rounded-full object-cover bg-zinc-700"
                                 />

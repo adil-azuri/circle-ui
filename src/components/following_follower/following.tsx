@@ -13,7 +13,6 @@ interface User {
 export function Following() {
     const [loading, setLoading] = useState<boolean>(true);
     const [users, setUsers] = useState<User[]>([]);
-    const baseUrl = `http://localhost:3000/uploads/`;
 
     const fetchFollowers = async () => {
         setLoading(true);
@@ -48,7 +47,7 @@ export function Following() {
                                     <div className="w-9 h-9 rounded-full bg-gray-700 flex items-center justify-center overflow-hidden">
                                         {user.photo_profile ? (
                                             <img
-                                                src={`${baseUrl}${user.photo_profile}`}
+                                                src={`${user.photo_profile}`}
                                                 alt={`${user.full_name}'s profile`}
                                                 className="w-full h-full object-cover"
                                             />

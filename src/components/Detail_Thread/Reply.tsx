@@ -75,8 +75,8 @@ export function Reply_Thread() {
                 </div>
             </CardHeader>
             <CardContent>
-                {replies.map((reply: any) => (
-                    <div key={reply.id} className="border-b border-gray-600 p-3 mb-2">
+                {replies.length > 0 && replies.map((reply: any, index: number) => (
+                    <div key={reply.id} className={`border-b border-gray-600 p-3 ${index === replies.length - 1 ? '' : 'mb-2'}`}>
                         <div className="flex space-x-4">
                             <Avatar className="size-7">
                                 <AvatarImage src={reply.user.photo_profile ? `${reply.user.photo_profile}` : avatar} />

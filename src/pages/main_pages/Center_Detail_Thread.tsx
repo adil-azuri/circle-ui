@@ -1,13 +1,12 @@
 
 import { useNavigate } from "react-router-dom";
 import { Select_Thread } from "@/components/Detail_Thread/Select_Thread";
-import { Reply_Thread } from "@/components/Detail_Thread/Reply";
 
 export const Center_Detail_thread = () => {
     const navigate = useNavigate();
 
     return (
-        <div className="shadow-lg border-gray-700 w-full">
+        <div className="flex flex-col h-full shadow-lg border-gray-700 w-full">
             <div className="flex px-4 pt-3">
                 <button
                     className="text-2xl font-bold text-green-400 font-sans"
@@ -18,7 +17,6 @@ export const Center_Detail_thread = () => {
                 </button>
             </div>
             <Select_Thread />
-            <Reply_Thread />
         </div>
     );
 }
